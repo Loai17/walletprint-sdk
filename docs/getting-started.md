@@ -26,7 +26,7 @@ const client = new WalletPrintClient({
 });
 ```
 
-For production, use a dedicated integrator API key instead of the sandbox key.
+Dedicated production API keys are coming soon. Until then, use the sandbox key for exploration.
 
 ## 3. Score a Proposed Transaction
 
