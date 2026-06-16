@@ -5,7 +5,8 @@ These examples use the published `@walletprint/sdk` package.
 Set an API key before running:
 
 ```bash
-export WALLETPRINT_API_KEY=your_key
+# Public sandbox — works out of the box
+export WALLETPRINT_API_KEY=walletprint-dev-key
 export WALLETPRINT_BASE_URL=https://walletprint.up.railway.app
 ```
 

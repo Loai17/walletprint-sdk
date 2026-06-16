@@ -10,14 +10,23 @@ npm install @walletprint/sdk
 
 ## 2. Create a Client
 
+Use the public sandbox key to try WalletPrint immediately:
+
+```bash
+export WALLETPRINT_API_KEY=walletprint-dev-key
+export WALLETPRINT_BASE_URL=https://walletprint.up.railway.app
+```
+
 ```ts
 import { WalletPrintClient } from "@walletprint/sdk";
 
 const client = new WalletPrintClient({
-  baseUrl: "https://walletprint.up.railway.app",
+  baseUrl: process.env.WALLETPRINT_BASE_URL!,
   apiKey: process.env.WALLETPRINT_API_KEY!,
 });
 ```
+
+For production, use a dedicated integrator API key instead of the sandbox key.
 
 ## 3. Score a Proposed Transaction
 

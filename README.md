@@ -159,10 +159,16 @@ await client.submitFeedback({
 
 ## Environment variables
 
+**Sandbox (try it now — no signup):**
+
 ```bash
-WALLETPRINT_API_KEY=your_api_key
+WALLETPRINT_API_KEY=walletprint-dev-key
 WALLETPRINT_BASE_URL=https://walletprint.up.railway.app
 ```
+
+This public sandbox key is rate-limited and for exploration only. Transactions are logged under the `public-sandbox` integrator. Sandbox traffic does not affect production cross-wallet clustering signals.
+
+**Production integrators:** request a dedicated API key at [walletprint.dev](https://walletprint.dev) (or contact the team). Never commit production keys.
 
 ## Advisory mode
 
