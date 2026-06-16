@@ -33,11 +33,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cipher11/walletprint-sdk.git"
+    "url": "git+https://github.com/Loai17/walletprint-sdk.git"
   },
-  "homepage": "https://github.com/cipher11/walletprint-sdk",
+  "homepage": "https://github.com/Loai17/walletprint-sdk",
   "bugs": {
-    "url": "https://github.com/cipher11/walletprint-sdk/issues"
+    "url": "https://github.com/Loai17/walletprint-sdk/issues"
   },
   "dependencies": {
     "zod": "^3.25.67"
