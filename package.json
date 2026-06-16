@@ -39,6 +39,9 @@
   "bugs": {
     "url": "https://github.com/Loai17/walletprint-sdk/issues"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "zod": "^3.25.67"
   },
