@@ -1,0 +1,59 @@
+{
+  "name": "@walletprint/sdk",
+  "version": "0.1.0",
+  "description": "Behavioral transaction risk SDK for crypto wallets and AI agent wallets",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "crypto",
+    "wallet",
+    "fraud",
+    "risk",
+    "agent-wallet",
+    "zerodev",
+    "langchain"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cipher11/walletprint-sdk.git"
+  },
+  "homepage": "https://github.com/cipher11/walletprint-sdk",
+  "bugs": {
+    "url": "https://github.com/cipher11/walletprint-sdk/issues"
+  },
+  "dependencies": {
+    "zod": "^3.25.67"
+  },
+  "peerDependencies": {
+    "@langchain/core": "^0.3.0"
+  },
+  "peerDependenciesMeta": {
+    "@langchain/core": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@langchain/core": "^0.3.62",
+    "@types/node": "^22.15.32",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "walletprint-basic-score-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node index.mjs"
+  },
+  "dependencies": {
+    "@walletprint/sdk": "^0.1.0"
+  }
+}

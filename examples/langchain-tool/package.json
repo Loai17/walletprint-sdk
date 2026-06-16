@@ -1,0 +1,11 @@
+{
+  "name": "walletprint-langchain-tool-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node index.mjs"
+  },
+  "dependencies": {
+    "@walletprint/sdk": "^0.1.0"
+  }
+}
