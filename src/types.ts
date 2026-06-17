@@ -32,7 +32,10 @@ export interface ScoreResponse {
     wallet_tx_count: number;
     is_cold_start: boolean;
   };
-  screened_transaction_id: string;
+  /** Present for production keys when the score is persisted. Omitted for sandbox. */
+  screened_transaction_id?: string;
+  /** True when using the public sandbox key — score is live but not saved. */
+  sandbox?: boolean;
 }
 
 export type FeedbackLabel =

@@ -88,9 +88,22 @@ interface ScoreResponse {
     wallet_tx_count: number;
     is_cold_start: boolean;
   };
-  screened_transaction_id: string;
+  screened_transaction_id?: string;
+  sandbox?: boolean;
 }
 ```
+
+### Sandbox vs production keys
+
+| | Public sandbox (`walletprint-dev-key`) | Production integrator key |
+| --- | --- | --- |
+| Scoring | Live rules and reason codes | Live rules and reason codes |
+| Persistence | None | Full (`screened_transactions`, baselines, recipients) |
+| Wallet history | Not loaded (each score is ephemeral) | Loaded from prior screens |
+| Feedback | Not supported | Supported |
+| Cluster signals (R6) | Never written | Written when triggered |
+
+Sandbox responses include `"sandbox": true` and omit `screened_transaction_id`.
 
 ## `POST /v1/feedback`
 

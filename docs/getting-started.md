@@ -26,7 +26,7 @@ const client = new WalletPrintClient({
 });
 ```
 
-Dedicated production API keys are coming soon. Until then, use the sandbox key for exploration.
+Dedicated production API keys are coming soon. Until then, use the sandbox key for exploration. Sandbox scores are live but **not persisted** and do not load wallet history — use a production key when you are ready to build behavioral baselines from real traffic.
 
 ## 3. Score a Proposed Transaction
 

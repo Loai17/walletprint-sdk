@@ -166,9 +166,9 @@ WALLETPRINT_API_KEY=walletprint-dev-key
 WALLETPRINT_BASE_URL=https://walletprint.up.railway.app
 ```
 
-This public sandbox key is rate-limited and for exploration only. Transactions are logged under the `public-sandbox` integrator. Sandbox traffic does not affect production cross-wallet clustering signals.
+This public sandbox key is rate-limited and for exploration only. Scores are computed live but **not persisted**, and sandbox requests do not load wallet history. Production cross-wallet clustering signals are never written from sandbox traffic.
 
-**Production API keys:** coming soon — follow updates at [walletprint.vercel.app](https://walletprint.vercel.app). For now, use the sandbox key above.
+**Production API keys:** coming soon — follow updates at [walletprint.vercel.app](https://walletprint.vercel.app). Request a production key when you are ready to build behavioral baselines from real wallet activity.
 
 ## Advisory mode
 

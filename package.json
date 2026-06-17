@@ -1,6 +1,6 @@
 {
   "name": "@walletprint/sdk",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Behavioral transaction risk SDK for crypto wallets and AI agent wallets",
   "type": "module",
   "main": "./dist/index.js",
@@ -39,9 +39,6 @@
   "bugs": {
     "url": "https://github.com/Loai17/walletprint-sdk/issues"
   },
-  "publishConfig": {
-    "access": "public"
-  },
   "dependencies": {
     "zod": "^3.25.67"
   },
@@ -58,5 +55,8 @@
     "@types/node": "^22.15.32",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
