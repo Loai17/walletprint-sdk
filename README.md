@@ -174,6 +174,12 @@ This public sandbox key is rate-limited and for exploration only. Scores are com
 
 v1 is advisory only. The SDK logs and returns risk scores; your application decides whether to proceed, pause, or require human approval.
 
+## Security scanners
+
+WalletPrint's SDK makes network calls to score transactions via our hosted API. Security scanners (e.g., [Socket](https://socket.dev)) will flag "network access" and "URL strings" — this is expected behavior for a risk-scoring SDK, not a vulnerability.
+
+Optional LangChain integration (`createLangChainDynamicTool`) uses `@langchain/core` as a peer dependency. WalletPrint does not enable LangSmith tracing or verbose console logging — the SDK only wraps a score API call as a structured tool.
+
 ## License
 
 MIT
