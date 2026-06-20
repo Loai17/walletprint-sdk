@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.5
+
+Security: explicitly pin transitive `uuid` to `11.1.1` (top-level override + devDependency) to resolve CVE-2026-41907 and deprecated `uuid@10`. No API changes.
+
 ## 0.1.4
 
 Security: bumped transitive `langsmith` dependency to `>=0.6.0` to resolve four disclosed CVEs (prompt deserialization trust boundary, SSRF via tracing headers, streaming redaction bypass, prototype pollution). Removes deprecated `uuid@10` from the dependency tree. No changes to WalletPrint's own API or scoring logic.
