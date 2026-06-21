@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.6
+
+Docs: webhook approval flow, compliance export (`GET /v1/audit-export`, `PATCH /v1/webhook`), and updated API reference. No SDK client API changes.
+
 ## 0.1.5
 
 Security: explicitly pin `uuid` to `11.1.1` (devDependency + `@langchain/core` override) to resolve CVE-2026-41907 and deprecated `uuid@10`. No API changes.

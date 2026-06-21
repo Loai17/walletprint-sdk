@@ -1,6 +1,6 @@
 {
   "name": "@walletprint/sdk",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Behavioral transaction risk SDK for crypto wallets and AI agent wallets",
   "type": "module",
   "main": "./dist/index.js",
