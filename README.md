@@ -41,6 +41,8 @@ console.log(result.score, result.band, result.reason_codes);
 
 - [Getting started](docs/getting-started.md)
 - [HTTP API reference](docs/api.md)
+- [Approval flow & webhooks](docs/approval-flow.md)
+- [Compliance export](docs/compliance.md)
 - [Examples](examples/README.md)
 
 ## Development
@@ -147,6 +149,32 @@ await client.submitFeedback({
   notes: "Legitimate treasury transfer",
 });
 ```
+
+## Webhooks & approval flow
+
+WalletPrint is a signal layer — not an approval UI. Register a webhook to receive medium/high band alerts and wire them into Slack, email, or your own review flow:
+
+```bash
+curl https://walletprint.up.railway.app/v1/webhook \
+  -X PATCH \
+  -H "content-type: application/json" \
+  -H "x-api-key: YOUR_PRODUCTION_API_KEY" \
+  -d '{"webhook_url": "https://your-app.com/walletprint/webhook", "webhook_bands": ["medium", "high"]}'
+```
+
+See [approval-flow.md](docs/approval-flow.md) for the webhook payload schema and reference integrations.
+
+## Compliance export
+
+Pull audit records (scores, reason codes, human decisions) for oversight documentation:
+
+```bash
+curl "https://walletprint.up.railway.app/v1/audit-export?format=csv" \
+  -H "x-api-key: YOUR_PRODUCTION_API_KEY" \
+  -o walletprint-audit.csv
+```
+
+See [compliance.md](docs/compliance.md) for details.
 
 ## API reference
 

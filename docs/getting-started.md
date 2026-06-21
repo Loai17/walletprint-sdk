@@ -94,3 +94,9 @@ This avoids flooding new integrators with false positives.
 ## Advisory Mode
 
 WalletPrint v1 never blocks a transaction. It returns a score and reason codes; the integrator decides what to do.
+
+## Next Steps
+
+- **Wire into your approval flow** — configure webhooks and connect Slack or email alerts. See [approval-flow.md](./approval-flow.md).
+- **Compliance export** — pull audit records for oversight documentation. See [compliance.md](./compliance.md).
+- **Full API reference** — [api.md](./api.md).

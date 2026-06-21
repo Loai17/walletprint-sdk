@@ -2,7 +2,7 @@
 
 ## 0.1.5
 
-Security: explicitly pin transitive `uuid` to `11.1.1` (top-level override + devDependency) to resolve CVE-2026-41907 and deprecated `uuid@10`. No API changes.
+Security: explicitly pin `uuid` to `11.1.1` (devDependency + `@langchain/core` override) to resolve CVE-2026-41907 and deprecated `uuid@10`. No API changes.
 
 ## 0.1.4
 
