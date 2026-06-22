@@ -1,4 +1,4 @@
-export type Chain = "base" | "ethereum";
+export type Chain = "base" | "ethereum" | "solana";
 
 export type RiskBand = "low" | "medium" | "high";
 
@@ -97,6 +97,16 @@ export interface ZeroDevWrapperOptions {
   walletAddress: string;
   chain: Chain;
   getValueUsd: (transaction: ProposedEvmTransaction) => number | Promise<number>;
+  asset?: string;
+  onScore?: (result: ScoreResponse) => void;
+}
+
+export interface SolanaMiddlewareOptions {
+  client: import("./client.js").WalletPrintClient;
+  walletAddress: string;
+  getValueUsd?: (
+    transaction: import("@solana/web3.js").Transaction | import("@solana/web3.js").VersionedTransaction,
+  ) => number | Promise<number>;
   asset?: string;
   onScore?: (result: ScoreResponse) => void;
 }

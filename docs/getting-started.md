@@ -95,6 +95,26 @@ This avoids flooding new integrators with false positives.
 
 WalletPrint v1 never blocks a transaction. It returns a score and reason codes; the integrator decides what to do.
 
+## Solana
+
+The scoring API is chain-agnostic. Pass `chain: "solana"` with a Solana wallet address and recipient:
+
+```ts
+const result = await client.score({
+  wallet: {
+    address: "YourSolanaWalletBase58Address",
+    chain: "solana",
+  },
+  transaction: {
+    to: "RecipientBase58Address",
+    value_usd: 250,
+    asset: "SOL",
+  },
+});
+```
+
+For agent-wallet send flows, use `createSolanaWalletPrintMiddleware` from the SDK (requires optional `@solana/web3.js` peer). See the [SDK README](https://github.com/Loai17/walletprint-sdk#solana).
+
 ## Next Steps
 
 - **Wire into your approval flow** — configure webhooks and connect Slack or email alerts. See [approval-flow.md](./approval-flow.md).

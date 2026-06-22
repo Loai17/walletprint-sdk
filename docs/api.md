@@ -59,7 +59,7 @@ Request shape:
 interface ScoreRequest {
   wallet: {
     address: string;
-    chain: "base" | "ethereum";
+    chain: "base" | "ethereum" | "solana";
   };
   transaction: {
     to: string;

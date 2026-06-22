@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.7
+
+Feature: Solana transaction support via `createSolanaWalletPrintMiddleware` and `createSolanaLangChainTool`. Adds `"solana"` to the `Chain` type. `@solana/web3.js` is an optional peer dependency.
+
+Security note: optional `@solana/web3.js` installs may surface GHSA-w5hq-g745-h8pq (`uuid` < 11.1.1) via `jayson` — same CVE class already mitigated for `@langchain/core`; upstream-owned, not fixable in this package without breaking Solana support.
+
 ## 0.1.6
 
 Docs: webhook approval flow, compliance export (`GET /v1/audit-export`, `PATCH /v1/webhook`), and updated API reference. No SDK client API changes.

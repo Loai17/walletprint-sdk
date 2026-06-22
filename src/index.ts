@@ -17,6 +17,11 @@ export {
   wrapZeroDevSendTransaction,
   zeroDevPreSignHook,
 } from "./zerodev-wrapper.js";
+export {
+  createSolanaLangChainTool,
+  createSolanaWalletPrintMiddleware,
+  extractSolanaTransactionData,
+} from "./solana-wrapper.js";
 export type {
   Chain,
   FeedbackLabel,
@@ -31,6 +36,7 @@ export type {
   ScoreRequest,
   ScoreResponse,
   ScreenHookOptions,
+  SolanaMiddlewareOptions,
   WalletPrintClientOptions,
   ZeroDevWrapperOptions,
 } from "./types.js";

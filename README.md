@@ -137,6 +137,44 @@ const result = await tool.invoke({
 });
 ```
 
+## Solana
+
+WalletPrint supports Solana agent wallets via `createSolanaWalletPrintMiddleware`.
+
+```typescript
+import { WalletPrintClient, createSolanaWalletPrintMiddleware } from "@walletprint/sdk";
+import { Transaction, Connection, PublicKey } from "@solana/web3.js";
+
+const client = new WalletPrintClient({
+  baseUrl: process.env.WALLETPRINT_BASE_URL!,
+  apiKey: process.env.WALLETPRINT_API_KEY!,
+});
+
+const screenedSend = createSolanaWalletPrintMiddleware(
+  async (tx) => {
+    // your existing send logic here
+    const signature = await connection.sendTransaction(tx, [payer]);
+    return signature;
+  },
+  {
+    client,
+    walletAddress: payer.publicKey.toString(),
+    asset: "SOL",
+    onScore: (result) => {
+      console.log("WalletPrint:", result.band, result.reason_codes);
+      if (result.band === "high") {
+        // pause, alert a human, require confirmation
+      }
+    },
+  }
+);
+
+// Use exactly like your existing send
+const { signature, score } = await screenedSend(transaction);
+```
+
+Sandbox key `walletprint-dev-key` works immediately for testing.
+
 ## Feedback
 
 Help improve the model by labeling outcomes:
@@ -184,6 +222,8 @@ See [compliance.md](docs/compliance.md) for details.
 - `zeroDevPreSignHook(client, options)`
 - `createWalletPrintScoreTool(options)`
 - `createLangChainDynamicTool(options)` (requires `@langchain/core`)
+- `createSolanaWalletPrintMiddleware(sendFn, options)` (requires `@solana/web3.js`)
+- `createSolanaLangChainTool(options)` (requires `@langchain/core`)
 
 ## Environment variables
 
@@ -204,9 +244,17 @@ v1 is advisory only. The SDK logs and returns risk scores; your application deci
 
 ## Security scanners
 
-WalletPrint's SDK makes network calls to score transactions via our hosted API. Security scanners (e.g., [Socket](https://socket.dev)) will flag "network access" and "URL strings" — this is expected behavior for a risk-scoring SDK, not a vulnerability.
+WalletPrint's SDK makes network calls to score transactions via our hosted API. Security scanners (e.g., [Socket](https://socket.dev)) will flag **network access** and **URL strings** — this is expected behavior for a risk-scoring SDK, not a vulnerability.
 
-Optional LangChain integration (`createLangChainDynamicTool`) uses `@langchain/core` as a peer dependency. WalletPrint does not enable LangSmith tracing or verbose console logging — the SDK only wraps a score API call as a structured tool.
+**Optional peer dependencies** — WalletPrint's own runtime is `zod` only. Integrations pull in optional peers; documented findings below are upstream-owned, not WalletPrint code.
+
+| Integration | Peer dep | Known scanner / audit notes |
+| --- | --- | --- |
+| LangChain | `@langchain/core` | Transitive `langsmith` — four CVEs resolved in **0.1.4** via override to `langsmith@0.7.10`. WalletPrint does not enable LangSmith tracing or verbose console logging. |
+| LangChain | `@langchain/core` | Transitive `uuid` — **GHSA-w5hq-g745-h8pq** / CVE-2026-41907 mitigated in **0.1.5** via `uuid@11.1.1` devDependency + nested override on `@langchain/core`. |
+| Solana | `@solana/web3.js` | Transitive `@solana/web3.js` → `jayson` → `uuid@8.3.2` — **same CVE class** as above (**GHSA-w5hq-g745-h8pq**, `uuid` < 11.1.1). Added in **0.1.7** as an optional peer; npm overrides cannot fix without breaking `@solana/web3.js`. Only appears when you install the Solana peer for dev/CI. |
+
+If Socket or `npm audit` surfaces `uuid` alerts after **0.1.7**, check which optional peer is installed — this is not a regression in WalletPrint's core package.
 
 ## License
 
