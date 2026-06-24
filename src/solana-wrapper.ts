@@ -108,7 +108,9 @@ async function screenSolanaTransaction(
       value_usd: valueUsd,
       asset: options.asset ?? "SOL",
       contract_address: extracted.contract_address,
+      ...(options.transactionType ? { transaction_type: options.transactionType } : {}),
     },
+    ...(options.context ? { context: options.context } : {}),
   });
 
   options.onScore?.(result);

@@ -33,6 +33,8 @@ export function wrapZeroDevSendTransaction<T extends ProposedEvmTransaction, R>(
       transaction,
       valueUsd,
       asset: options.asset,
+      transactionType: options.transactionType,
+      context: options.context,
       onScore: options.onScore,
     });
 
@@ -58,6 +60,8 @@ export async function zeroDevPreSignHook(
     transaction: options.transaction,
     valueUsd,
     asset: options.asset,
+    transactionType: options.transactionType,
+    context: options.context,
     onScore: options.onScore,
   });
 }

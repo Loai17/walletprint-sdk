@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.8
+
+Feature: optional `transaction_type` (on `transaction`) and `context` (top-level) on `ScoreRequest`. Stored with each screened transaction for marketplace/agent-wallet telemetry. Does not affect R1–R6 scoring. SDK wrappers accept optional `context` and `transactionType`. Docs updated.
+
 ## 0.1.7
 
 Feature: Solana transaction support via `createSolanaWalletPrintMiddleware` and `createSolanaLangChainTool`. Adds `"solana"` to the `Chain` type. `@solana/web3.js` is an optional peer dependency.

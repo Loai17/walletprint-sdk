@@ -9,6 +9,7 @@ const scoreToolSchema = z.object({
   contract_address: z.string().optional(),
   contract_category: z.string().optional(),
   method_signature: z.string().optional(),
+  transaction_type: z.string().optional(),
 });
 
 export type LangChainScoreToolInput = z.infer<typeof scoreToolSchema>;
@@ -49,7 +50,9 @@ export function createWalletPrintScoreTool(
           contract_address: input.contract_address,
           contract_category: input.contract_category,
           method_signature: input.method_signature,
+          ...(input.transaction_type ? { transaction_type: input.transaction_type } : {}),
         },
+        ...(options.context ? { context: options.context } : {}),
       });
     },
   };

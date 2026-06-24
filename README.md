@@ -37,6 +37,29 @@ const result = await client.score({
 console.log(result.score, result.band, result.reason_codes);
 ```
 
+## Context & Transaction Type
+
+Optional metadata for marketplace and agent-wallet integrations. These fields are stored with each screened transaction for future threshold tuning — they do not affect scoring today.
+
+```typescript
+const result = await client.score({
+  wallet: { address: "0xYourAgent", chain: "base" },
+  transaction: {
+    to: "0xRecipient",
+    value_usd: 0.5,
+    asset: "USDC",
+    transaction_type: "micropayment", // optional
+  },
+  context: {
+    platform: "tiny_place", // optional — e.g. tiny_place, zerodev, langchain, coinbase_agentkit
+    environment: "production", // optional
+    agent_id: "agent-42", // optional
+  },
+});
+```
+
+Wrappers (`wrapZeroDevSendTransaction`, `createSolanaWalletPrintMiddleware`, `createWalletPrintScoreTool`) accept an optional `context` and `transactionType` in their options — nothing is sent automatically; integrators opt in explicitly.
+
 ## Documentation
 
 - [Getting started](docs/getting-started.md)

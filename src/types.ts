@@ -1,5 +1,18 @@
 export type Chain = "base" | "ethereum" | "solana";
 
+export type TransactionType =
+  | "micropayment"
+  | "transfer"
+  | "contract_interaction"
+  | "bounty_payment"
+  | string;
+
+export interface ScoreContext {
+  platform?: string;
+  environment?: "sandbox" | "production";
+  agent_id?: string;
+}
+
 export type RiskBand = "low" | "medium" | "high";
 
 export interface ReasonCode {
@@ -21,7 +34,9 @@ export interface ScoreRequest {
     contract_address?: string;
     method_signature?: string;
     contract_category?: string;
+    transaction_type?: TransactionType;
   };
+  context?: ScoreContext;
 }
 
 export interface ScoreResponse {
@@ -86,6 +101,8 @@ export interface MapTransactionOptions {
   transaction: ProposedEvmTransaction;
   valueUsd: number;
   asset?: string;
+  transactionType?: TransactionType;
+  context?: ScoreContext;
 }
 
 export interface ScreenHookOptions extends MapTransactionOptions {
@@ -98,6 +115,8 @@ export interface ZeroDevWrapperOptions {
   chain: Chain;
   getValueUsd: (transaction: ProposedEvmTransaction) => number | Promise<number>;
   asset?: string;
+  transactionType?: TransactionType;
+  context?: ScoreContext;
   onScore?: (result: ScoreResponse) => void;
 }
 
@@ -108,6 +127,8 @@ export interface SolanaMiddlewareOptions {
     transaction: import("@solana/web3.js").Transaction | import("@solana/web3.js").VersionedTransaction,
   ) => number | Promise<number>;
   asset?: string;
+  transactionType?: TransactionType;
+  context?: ScoreContext;
   onScore?: (result: ScoreResponse) => void;
 }
 
@@ -121,4 +142,5 @@ export interface LangChainToolOptions {
     asset: string;
   }) => number | Promise<number>;
   defaultAsset?: string;
+  context?: ScoreContext;
 }

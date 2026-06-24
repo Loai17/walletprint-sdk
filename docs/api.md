@@ -68,8 +68,40 @@ interface ScoreRequest {
     contract_address?: string;
     method_signature?: string;
     contract_category?: string;
+    transaction_type?: string; // optional — e.g. "micropayment", "bounty_payment"
+  };
+  context?: {
+    platform?: string;       // optional — e.g. "tiny_place", "zerodev", "langchain"
+    environment?: "sandbox" | "production";
+    agent_id?: string;
   };
 }
+```
+
+Optional `transaction_type` and `context` are stored with each screened transaction for future threshold tuning. They do **not** affect scoring today — omit them and behavior is unchanged.
+
+Example with marketplace metadata:
+
+```bash
+curl https://walletprint.up.railway.app/v1/score \
+  -H "content-type: application/json" \
+  -H "x-api-key: YOUR_API_KEY" \
+  -d '{
+    "wallet": {
+      "address": "0x1111111111111111111111111111111111111111",
+      "chain": "base"
+    },
+    "transaction": {
+      "to": "0x7777777777777777777777777777777777777777",
+      "value_usd": 0.50,
+      "asset": "USDC",
+      "transaction_type": "micropayment"
+    },
+    "context": {
+      "platform": "tiny_place",
+      "environment": "production"
+    }
+  }'
 ```
 
 Response shape:

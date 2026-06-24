@@ -100,6 +100,26 @@ describe("mapProposedTransactionToScoreRequest", () => {
     expect(request.transaction.value_usd).toBe(250);
   });
 
+  it("forwards optional transaction_type and context", () => {
+    const request = mapProposedTransactionToScoreRequest({
+      walletAddress: "0x1111111111111111111111111111111111111111",
+      chain: "base",
+      valueUsd: 0.5,
+      asset: "USDC",
+      transactionType: "micropayment",
+      context: { platform: "tiny_place", environment: "production" },
+      transaction: {
+        to: "0x2222222222222222222222222222222222222222",
+      },
+    });
+
+    expect(request.transaction.transaction_type).toBe("micropayment");
+    expect(request.context).toEqual({
+      platform: "tiny_place",
+      environment: "production",
+    });
+  });
+
   it("converts wei to USD for ETH transfers", () => {
     expect(toUsdNumber(1_000_000_000_000_000_000n, "ETH", 3000)).toBe(3000);
     expect(inferMethodSignature("0xa9059cbb0000")).toBe("0xa9059cbb");

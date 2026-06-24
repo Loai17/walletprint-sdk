@@ -33,10 +33,12 @@ export type {
   ProposedEvmTransaction,
   ReasonCode,
   RiskBand,
+  ScoreContext,
   ScoreRequest,
   ScoreResponse,
   ScreenHookOptions,
   SolanaMiddlewareOptions,
+  TransactionType,
   WalletPrintClientOptions,
   ZeroDevWrapperOptions,
 } from "./types.js";

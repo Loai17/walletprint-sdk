@@ -95,6 +95,32 @@ This avoids flooding new integrators with false positives.
 
 WalletPrint v1 never blocks a transaction. It returns a score and reason codes; the integrator decides what to do.
 
+## Context & Transaction Type (optional)
+
+Agent marketplaces (e.g. Tiny Place on Solana) often have high-frequency micropayments and many new recipients by design — patterns that look risky for a single agent but are normal on a platform. You can tag scores with optional metadata so WalletPrint can tune thresholds later using real production data.
+
+```ts
+const result = await client.score({
+  wallet: {
+    address: "0x1111111111111111111111111111111111111111",
+    chain: "base",
+  },
+  transaction: {
+    to: "0x7777777777777777777777777777777777777777",
+    value_usd: 0.5,
+    asset: "USDC",
+    transaction_type: "micropayment", // optional
+  },
+  context: {
+    platform: "tiny_place", // optional
+    environment: "production",
+    agent_id: "agent-42",
+  },
+});
+```
+
+These fields are persisted with each screened transaction. They do **not** change the score or reason codes today. SDK wrappers (`wrapZeroDevSendTransaction`, `createSolanaWalletPrintMiddleware`, `createWalletPrintScoreTool`) accept optional `context` and `transactionType` in their options — nothing is sent automatically.
+
 ## Solana
 
 The scoring API is chain-agnostic. Pass `chain: "solana"` with a Solana wallet address and recipient:

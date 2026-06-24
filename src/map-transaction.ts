@@ -36,7 +36,9 @@ export function mapProposedTransactionToScoreRequest(
       contract_address: options.transaction.contract_address,
       method_signature: options.transaction.method_signature ?? inferMethodSignature(options.transaction.data),
       contract_category: options.transaction.contract_category,
+      ...(options.transactionType ? { transaction_type: options.transactionType } : {}),
     },
+    ...(options.context ? { context: options.context } : {}),
   };
 }
 
