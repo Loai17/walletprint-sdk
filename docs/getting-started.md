@@ -26,7 +26,7 @@ const client = new WalletPrintClient({
 });
 ```
 
-Dedicated production API keys are coming soon. Until then, use the sandbox key for exploration. Sandbox scores are live but **not persisted** and do not load wallet history — use a production key when you are ready to build behavioral baselines from real traffic.
+Dedicated production API keys are coming soon. Until then, use the sandbox key for exploration. Sandbox scores are live but **not persisted**; they may compute an ephemeral baseline from a wallet's recent on-chain history for the response, but nothing is saved and no cross-wallet signals are written. Use a production key when you are ready to build durable behavioral baselines from real traffic.
 
 ## 3. Score a Proposed Transaction
 
@@ -90,6 +90,22 @@ If a wallet has fewer than five screened transactions, some behavioral rules are
 - recipient novelty can still trigger
 
 This avoids flooding new integrators with false positives.
+
+### History seeding (shortens cold start)
+
+The first time a production key scores a brand-new wallet, WalletPrint can pull the
+wallet's recent on-chain history (up to 90 days / 200 transfers via Alchemy) and seed an
+initial behavioral baseline — so size, velocity, and clustering signals are useful from
+the first real transaction instead of the fifth. Seeding is best-effort and runs in the
+background: it never blocks or changes the response to that first request, and a failure
+silently falls back to a normal cold start.
+
+The seeded baseline is kept as a floor and **blended** with your organic screened traffic
+until the wallet accumulates enough real history (20 screened transactions), at which
+point the seed is retired and the baseline is built purely from your own traffic. This
+means a single real transaction can never wipe out the richer seeded baseline.
+
+Seeding is on by default and can be disabled per integrator (`history_seeding_enabled`).
 
 ## Advisory Mode
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.9
+
+Feature: optional on-chain history seeding for new wallets (server-side). The first time a wallet is scored, WalletPrint can pull its recent transaction history from Alchemy (90-day / 200-tx cap) and seed an initial behavioral baseline — so R2 (size deviation), R3 (velocity), and R6 (clustering) are useful from transaction one instead of transaction five. Seeding is fire-and-forget and best-effort: it never blocks or affects a score response, and it is on by default per integrator (`history_seeding_enabled`). The seeded baseline is kept as a floor and blended with organic screened traffic until the wallet reaches 20 real transactions, so a single real transaction can't wipe out the seed. Sandbox scoring can compute the same baseline ephemerally (never persisted). No SDK client API changes.
+
 ## 0.1.8
 
 Feature: optional `transaction_type` (on `transaction`) and `context` (top-level) on `ScoreRequest`. Stored with each screened transaction for marketplace/agent-wallet telemetry. Does not affect R1–R6 scoring. SDK wrappers accept optional `context` and `transactionType`. Docs updated.
