@@ -122,6 +122,8 @@ interface ScoreResponse {
   };
   screened_transaction_id?: string;
   sandbox?: boolean;
+  /** Present when scoring with a per-agent API key (production only). */
+  agent_key_id?: string;
 }
 ```
 
@@ -137,6 +139,105 @@ interface ScoreResponse {
 
 Sandbox responses include `"sandbox": true` and omit `screened_transaction_id`.
 
+Production scores made with a **per-agent API key** include `agent_key_id` linking the row to that key.
+
+## API key types
+
+| Key type | Prefix | Access |
+| --- | --- | --- |
+| Public sandbox | `walletprint-dev-key` | `POST /v1/score` only (ephemeral, not persisted) |
+| Master integrator | `wp_live_…` | All endpoints |
+| Per-agent | `wp_agent_…` | `POST /v1/score`, `POST /v1/feedback` only; optional wallet/chain scope |
+
+Issue a master key via [self-serve signup](https://walletprint.vercel.app/dashboard/signup). Create per-agent keys with `POST /v1/agent-keys` (master key required).
+
+### Per-agent key scoping
+
+If `wallet_address` and/or `chain` are set on an agent key, `POST /v1/score` requests outside that scope return `403` with a clear error message. Revoked agent keys return `401`.
+
+## `POST /v1/agent-keys`
+
+Create a per-agent API key. **Master integrator key required.** Production keys only.
+
+```bash
+curl https://walletprint.up.railway.app/v1/agent-keys \
+  -H "content-type: application/json" \
+  -H "x-api-key: YOUR_MASTER_KEY" \
+  -d '{
+    "agent_name": "trading-agent-1",
+    "wallet_address": "0xYourAgentWallet",
+    "chain": "base",
+    "rate_limit_per_minute": 60
+  }'
+```
+
+Request body:
+
+```ts
+interface CreateAgentKeyRequest {
+  agent_name: string;
+  wallet_address?: string;
+  chain?: "base" | "ethereum" | "solana";
+  rate_limit_per_minute?: number; // default 60, max 10000
+}
+```
+
+Response (API key returned **once**):
+
+```json
+{
+  "agent_key_id": "uuid",
+  "api_key": "wp_agent_…",
+  "agent_name": "trading-agent-1",
+  "wallet_address": "0xYourAgentWallet",
+  "chain": "base",
+  "created_at": "2026-06-30T12:00:00.000Z"
+}
+```
+
+## `GET /v1/agent-keys`
+
+List agent keys for your integrator. **Master key required.**
+
+```bash
+curl https://walletprint.up.railway.app/v1/agent-keys \
+  -H "x-api-key: YOUR_MASTER_KEY"
+```
+
+Response:
+
+```json
+{
+  "agent_keys": [
+    {
+      "agent_key_id": "uuid",
+      "agent_name": "trading-agent-1",
+      "wallet_address": "0xYourAgentWallet",
+      "chain": "base",
+      "is_active": true,
+      "created_at": "2026-06-30T12:00:00.000Z",
+      "last_used_at": "2026-06-30T18:00:00.000Z",
+      "rate_limit_per_minute": 60
+    }
+  ]
+}
+```
+
+## `DELETE /v1/agent-keys/:agent_key_id`
+
+Revoke an agent key. **Master key required.**
+
+```bash
+curl -X DELETE https://walletprint.up.railway.app/v1/agent-keys/AGENT_KEY_ID \
+  -H "x-api-key: YOUR_MASTER_KEY"
+```
+
+Response:
+
+```json
+{ "revoked": true, "agent_key_id": "uuid" }
+```
+
 ## `GET /v1/audit-export`
 
 Exports screened transactions and human feedback labels for compliance and oversight documentation. Production API keys only.
@@ -148,8 +249,8 @@ curl "https://walletprint.up.railway.app/v1/audit-export?from=2025-06-01T00:00:0
 
 Query parameters:
 
-- `from` — start of date range (ISO 8601, optional; default: 30 days before `to`)
-- `to` — end of date range (ISO 8601, optional; default: now)
+- `from` — start of date range (ISO 8601 or `YYYY-MM-DD`, optional; default: 30 days before `to`)
+- `to` — end of date range (ISO 8601 or `YYYY-MM-DD`, optional; default: now). Date-only values include the full UTC day.
 - `wallet` — filter to a specific wallet address (optional)
 - `format` — `json` (default) or `csv`
 
@@ -211,6 +312,28 @@ interface WebhookSettings {
 
 When a scored transaction matches a configured band, WalletPrint POSTs a `transaction.flagged` payload to your URL. See [approval-flow.md](./approval-flow.md) for the full payload schema and reference integrations (Slack, email).
 
+## `POST /v1/webhook/test`
+
+Send a test webhook payload to your configured URL. **Master integrator key required.** Production keys only.
+
+```bash
+curl https://walletprint.up.railway.app/v1/webhook/test \
+  -X POST \
+  -H "content-type: application/json" \
+  -H "x-api-key: YOUR_MASTER_KEY" \
+  -d '{}'
+```
+
+Returns `400` if no webhook URL is configured. On success:
+
+```json
+{
+  "sent": true,
+  "webhook_url": "https://your-app.com/walletprint/webhook",
+  "payload_preview": { "event": "transaction.flagged", "score": 62, "band": "medium", "...": "..." }
+}
+```
+
 ## `POST /v1/feedback`
 
 Labels a screened transaction.
@@ -242,4 +365,4 @@ Label sources:
 
 ## Rate Limits
 
-The hosted service applies per-integrator rate limits. Defaults are currently configured as `120` requests per minute.
+The hosted service applies per-integrator rate limits. Master integrator keys default to **120 requests per minute**. Per-agent keys use the `rate_limit_per_minute` set at creation (default 60, max 10,000).

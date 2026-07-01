@@ -26,7 +26,9 @@ const client = new WalletPrintClient({
 });
 ```
 
-Dedicated production API keys are coming soon. Until then, use the sandbox key for exploration. Sandbox scores are live but **not persisted**; they may compute an ephemeral baseline from a wallet's recent on-chain history for the response, but nothing is saved and no cross-wallet signals are written. Use a production key when you are ready to build durable behavioral baselines from real traffic.
+Dedicated production API keys are available via **self-serve signup** at [walletprint.vercel.app/dashboard/signup](https://walletprint.vercel.app/dashboard/signup). You receive a master integrator key (`wp_live_…`) once — store it securely. From the dashboard you can create per-agent keys, review transactions, configure webhooks, and download audit exports.
+
+Use the public sandbox key (`walletprint-dev-key`) to explore without an account. Sandbox scores are live but **not persisted**; they may compute an ephemeral baseline from a wallet's recent on-chain history for the response, but nothing is saved and no cross-wallet signals are written.
 
 ## 3. Score a Proposed Transaction
 
@@ -74,12 +76,40 @@ Feedback is the product loop. If the result is wrong or confirmed, label it.
 
 ```ts
 await client.submitFeedback({
-  screened_transaction_id: result.screened_transaction_id,
+  screened_transaction_id: result.screened_transaction_id!,
   label: "confirmed_benign",
   label_source: "integrator_dashboard",
   notes: "Expected treasury transfer",
 });
 ```
+
+## Per-agent API keys
+
+For fleets of agent wallets, create scoped keys from your master key (server-side only — never expose the master key in client code):
+
+```ts
+const response = await fetch("https://walletprint.up.railway.app/v1/agent-keys", {
+  method: "POST",
+  headers: {
+    "content-type": "application/json",
+    "x-api-key": process.env.WALLETPRINT_MASTER_KEY!,
+  },
+  body: JSON.stringify({
+    agent_name: "trading-agent-1",
+    wallet_address: "0xYourAgentWallet",
+    chain: "base",
+  }),
+});
+const { api_key } = await response.json();
+// Store api_key securely — returned once only
+
+const agentClient = new WalletPrintClient({
+  baseUrl: process.env.WALLETPRINT_BASE_URL!,
+  apiKey: api_key,
+});
+```
+
+Agent keys can only call `POST /v1/score` and `POST /v1/feedback`. Manage keys in the [dashboard](https://walletprint.vercel.app/dashboard/agent-keys) or via the API.
 
 ## Cold Start Behavior
 
@@ -159,6 +189,7 @@ For agent-wallet send flows, use `createSolanaWalletPrintMiddleware` from the SD
 
 ## Next Steps
 
+- **Get a production key** — [self-serve signup](https://walletprint.vercel.app/dashboard/signup) (free).
 - **Wire into your approval flow** — configure webhooks and connect Slack or email alerts. See [approval-flow.md](./approval-flow.md).
-- **Compliance export** — pull audit records for oversight documentation. See [compliance.md](./compliance.md).
+- **Compliance export** — pull audit records from the dashboard or `GET /v1/audit-export`. See [compliance.md](./compliance.md).
 - **Full API reference** — [api.md](./api.md).

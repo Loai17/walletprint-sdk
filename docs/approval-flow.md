@@ -170,9 +170,19 @@ Your review page should call `/v1/feedback` when the human makes a decision. Wal
 ## Testing your webhook
 
 1. Register your endpoint with `PATCH /v1/webhook`.
-2. Score a transaction that triggers medium or high band using your production API key.
-3. Confirm your endpoint receives the payload.
-4. Submit feedback to close the loop.
+2. Send a test payload with `POST /v1/webhook/test` (master key required) — available in the [dashboard](https://walletprint.vercel.app/dashboard/webhooks) or via API:
+
+```bash
+curl https://walletprint.up.railway.app/v1/webhook/test \
+  -X POST \
+  -H "content-type: application/json" \
+  -H "x-api-key: YOUR_MASTER_KEY" \
+  -d '{}'
+```
+
+3. Score a transaction that triggers medium or high band using your production API key.
+4. Confirm your endpoint receives the payload.
+5. Submit feedback to close the loop.
 
 For local development, use a tunnel (ngrok, Cloudflare Tunnel) to expose your handler.
 

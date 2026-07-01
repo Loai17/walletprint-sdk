@@ -37,6 +37,38 @@ const result = await client.score({
 console.log(result.score, result.band, result.reason_codes);
 ```
 
+## Get a production API key
+
+Sign up free at **[walletprint.vercel.app/dashboard/signup](https://walletprint.vercel.app/dashboard/signup)**. You receive a master integrator key (`wp_live_…`) once. The dashboard lets you create per-agent keys, review transactions, configure webhooks, and download audit exports.
+
+## Per-agent API keys
+
+Create scoped keys for individual agent wallets (server-side, using your master key):
+
+```typescript
+const response = await fetch("https://walletprint.up.railway.app/v1/agent-keys", {
+  method: "POST",
+  headers: {
+    "content-type": "application/json",
+    "x-api-key": process.env.WALLETPRINT_MASTER_KEY!,
+  },
+  body: JSON.stringify({
+    agent_name: "trading-agent-1",
+    wallet_address: "0xYourAgentWallet",
+    chain: "base",
+  }),
+});
+const { api_key } = await response.json();
+// Store api_key securely — returned once only
+
+const agentClient = new WalletPrintClient({
+  baseUrl: process.env.WALLETPRINT_BASE_URL!,
+  apiKey: api_key,
+});
+```
+
+Agent keys can only call `POST /v1/score` and `POST /v1/feedback`. Optional `wallet_address` and `chain` lock scoring to that scope.
+
 ## Context & Transaction Type
 
 Optional metadata for marketplace and agent-wallet integrations. These fields are stored with each screened transaction for future threshold tuning — they do not affect scoring today.
@@ -223,7 +255,7 @@ curl https://walletprint.up.railway.app/v1/webhook \
   -d '{"webhook_url": "https://your-app.com/walletprint/webhook", "webhook_bands": ["medium", "high"]}'
 ```
 
-See [approval-flow.md](docs/approval-flow.md) for the webhook payload schema and reference integrations.
+See [approval-flow.md](docs/approval-flow.md) for the webhook payload schema, `POST /v1/webhook/test`, and reference integrations.
 
 ## Compliance export
 
@@ -259,7 +291,7 @@ WALLETPRINT_BASE_URL=https://walletprint.up.railway.app
 
 This public sandbox key is rate-limited and for exploration only. Scores are computed live but **not persisted**. Sandbox scoring may use a wallet's recent on-chain history to compute an ephemeral baseline for the response, but nothing is saved and production cross-wallet clustering signals are never written from sandbox traffic.
 
-**Production API keys:** coming soon — follow updates at [walletprint.vercel.app](https://walletprint.vercel.app). Request a production key when you are ready to build behavioral baselines from real wallet activity.
+**Production API keys:** self-serve at [walletprint.vercel.app/dashboard/signup](https://walletprint.vercel.app/dashboard/signup). Master keys persist scores and build behavioral baselines. Create per-agent keys from the dashboard or `POST /v1/agent-keys`.
 
 ## Advisory mode
 

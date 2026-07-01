@@ -87,4 +87,4 @@ Integrators remain responsible for their compliance programs, retention policies
 
 ## Enterprise buyers
 
-If you need audit export capabilities for a procurement or security review, contact us through [walletprint.vercel.app/contact](https://walletprint.vercel.app/contact). A production API key with persistence enabled is required.
+If you need audit export capabilities for a procurement or security review, sign up at [walletprint.vercel.app/dashboard/signup](https://walletprint.vercel.app/dashboard/signup) or use the [dashboard audit export](https://walletprint.vercel.app/dashboard/audit). A production API key with persistence enabled is required.

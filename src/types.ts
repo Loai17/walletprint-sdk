@@ -1,4 +1,12 @@
-export type Chain = "base" | "ethereum" | "solana";
+/**
+ * Chains the SDK advertises support for. Must stay in lockstep with the API's
+ * accepted chains — a contract test in the API package asserts this list equals
+ * the server-side chain enum so the SDK can never advertise a chain the API
+ * rejects (the bug that broke Solana scoring).
+ */
+export const SUPPORTED_CHAINS = ["base", "ethereum", "solana"] as const;
+
+export type Chain = (typeof SUPPORTED_CHAINS)[number];
 
 export type TransactionType =
   | "micropayment"
@@ -42,13 +50,16 @@ export interface ScoreRequest {
 export interface ScoreResponse {
   score: number;
   band: RiskBand;
+  /** The chain the wallet was scored on, echoed back from the request. */
+  chain: Chain;
   reason_codes: ReasonCode[];
   baseline_summary: {
     wallet_tx_count: number;
     is_cold_start: boolean;
   };
-  /** Present for production keys when the score is persisted. Omitted for sandbox. */
   screened_transaction_id?: string;
+  /** Present when the score was made with a per-agent API key. */
+  agent_key_id?: string;
   /** True when using the public sandbox key — score is live but not saved. */
   sandbox?: boolean;
 }

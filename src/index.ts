@@ -22,6 +22,7 @@ export {
   createSolanaWalletPrintMiddleware,
   extractSolanaTransactionData,
 } from "./solana-wrapper.js";
+export { SUPPORTED_CHAINS } from "./types.js";
 export type {
   Chain,
   FeedbackLabel,
